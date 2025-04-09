@@ -1,0 +1,48 @@
+using System.Linq.Expressions;
+
+namespace Notes.Application.Common.Interfaces;
+
+/// <summary>
+/// Интерфейс репозитория.
+/// </summary>
+/// <typeparam name="TEntity">Тип сущности.</typeparam>
+public interface IRepository<TEntity> where TEntity : class
+{
+    /// <summary>
+    /// Получить все сущности.
+    /// </summary>
+    /// <returns>Коллекция сущностей.</returns>
+    Task<IEnumerable<TEntity>> GetAllAsync();
+
+    /// <summary>
+    /// Получить сущность по ID.
+    /// </summary>
+    /// <param name="id">ID сущности.</param>
+    /// <returns>Сущность.</returns>
+    Task<TEntity?> GetByIdAsync(int id);
+
+    /// <summary>
+    /// Найти сущности по условию.
+    /// </summary>
+    /// <param name="filterExpression">Условие фильтрации.</param>
+    /// <returns>Коллекция сущностей.</returns>
+    Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> filterExpression);
+
+    /// <summary>
+    /// Создать сущность.
+    /// </summary>
+    /// <param name="entity">Сущность для создания.</param>
+    Task CreateAsync(TEntity entity);
+
+    /// <summary>
+    /// Обновить сущность.
+    /// </summary>
+    /// <param name="entity">Сущность для обновления.</param>
+    Task UpdateAsync(TEntity entity);
+
+    /// <summary>
+    /// Удалить сущность.
+    /// </summary>
+    /// <param name="id">ID сущности для удаления.</param>
+    Task DeleteAsync(int id);
+} 
