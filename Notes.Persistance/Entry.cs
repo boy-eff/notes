@@ -20,6 +20,7 @@ public static class Entry
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
+        services.Configure<MongoDbConfiguration>(configuration.GetSection(MongoDbConfiguration.SectionName));
         
         return services;
     }

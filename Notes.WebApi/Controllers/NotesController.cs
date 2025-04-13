@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Application.Features.Notes.Commands.CreateNote;
 using Notes.Application.Features.Notes.Commands.DeleteNote;
@@ -12,6 +13,7 @@ namespace Notes.WebApi.Controllers;
 /// <summary>
 /// Контроллер для работы с записками.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotesController : ControllerBase

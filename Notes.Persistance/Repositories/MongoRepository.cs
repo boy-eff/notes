@@ -26,7 +26,8 @@ public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : cla
     {
         var client = new MongoClient(configuration.Value.ConnectionString);
         var database = client.GetDatabase(configuration.Value.DatabaseName);
-        _collection = database.GetCollection<TEntity>(nameof(TEntity).ToLower());
+        var collectionName = typeof(TEntity).Name.ToLower();
+        _collection = database.GetCollection<TEntity>(collectionName);
     }
 
     /// <inheritdoc />

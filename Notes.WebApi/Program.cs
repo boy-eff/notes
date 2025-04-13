@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Notes.Application;
+using Notes.Infrastructure;
 using Notes.Persistance;
 using Notes.Persistance.Configuration;
+using Notes.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -13,10 +15,11 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddPersistence(configuration);
+builder.Services.AddInfrastructure(configuration);
 builder.Services.AddProblemDetails();
 
-builder.Services.Configure<MongoDbConfiguration>(
-    configuration.GetSection(MongoDbConfiguration.SectionName));
+// Configure Keycloak authentication
+// builder.Services.AddKeycloakAuthentication(configuration);
 
 var app = builder.Build();
 
@@ -34,8 +37,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapControllers();
+// app.UseHttpsRedirection();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
-app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
