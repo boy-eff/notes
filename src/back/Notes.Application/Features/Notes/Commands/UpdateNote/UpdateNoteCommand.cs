@@ -9,11 +9,11 @@ namespace Notes.Application.Features.Notes.Commands.UpdateNote;
 /// <summary>
 /// Команда обновления записки.
 /// </summary>
-public record UpdateNoteCommand : UpdateCommand<Note, NoteDto>
+public record UpdateNoteCommand : UpdateCommand<Note, UpdateNoteDto>
 {
     /// <summary>
     /// Обработчик команды обновления записки.
     /// </summary>
     private class Handler(IRepository<Note> noteRepository, IMapperService mapperService)
-        : UpdateCommandHandler<Note, NoteDto, UpdateNoteCommand>(noteRepository, mapperService);
+        : UpdateCommandHandler<Note, UpdateNoteDto, UpdateNoteCommand>(noteRepository, mapperService);
 } 

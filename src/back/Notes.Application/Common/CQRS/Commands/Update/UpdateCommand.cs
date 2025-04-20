@@ -7,7 +7,7 @@ namespace Notes.Application.Common.CQRS.Commands.Update;
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
-public record UpdateCommand<TEntity, TDto> : IRequest<TDto> 
+public record UpdateCommand<TEntity, TDto> : IRequest
     where TEntity : class 
     where TDto : class
 {

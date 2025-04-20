@@ -8,6 +8,7 @@ using Notes.Application.Features.Files.Commands.AttachFileToNote;
 using Notes.Application.Features.Files.Commands.DeleteFile;
 using Notes.Application.Features.Files.Commands.UploadFile;
 using Notes.Application.Features.Files.Queries.DownloadFile;
+using Notes.WebApi.Extensions;
 
 namespace Notes.WebApi.Controllers;
 
@@ -41,7 +42,7 @@ public class FilesController : ControllerBase
     {
         var command = new UploadFileCommand
         {
-            File = file
+            File = file.ToFileDto()
         };
         
         var fileUrl = await _mediator.Send(command);

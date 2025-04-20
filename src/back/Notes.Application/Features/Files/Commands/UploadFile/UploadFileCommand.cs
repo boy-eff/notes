@@ -2,7 +2,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Notes.Application.Common.Interfaces;
 using Notes.Application.Features.Files.Dto;
 
@@ -16,7 +15,7 @@ public record UploadFileCommand : IRequest<FileDto>
     /// <summary>
     /// Файл для загрузки.
     /// </summary>
-    public IFormFile File { get; init; } = null!;
+    public FileDto File { get; init; } = null!;
     
     /// <summary>
     /// Обработчик команды загрузки файла.
@@ -37,18 +36,17 @@ public record UploadFileCommand : IRequest<FileDto>
         /// <inheritdoc />
         public async Task<FileDto> Handle(UploadFileCommand request, CancellationToken cancellationToken)
         {
-            await using var stream = request.File.OpenReadStream();
             var url = await _fileStorageService.UploadFileAsync(
                 request.File.FileName,
-                stream,
+                request.File.Data,
                 request.File.ContentType);
                 
-            return new FileDto(
-                request.File.FileName,
-                request.File.FileName,
-                request.File.ContentType,
-                url,
-                request.File.Length);
+            return new FileDto
+            {
+                FileName = request.File.FileName,
+                ContentType = request.File.ContentType,
+                Data = request.File.Data
+            };
         }
     }
 } 

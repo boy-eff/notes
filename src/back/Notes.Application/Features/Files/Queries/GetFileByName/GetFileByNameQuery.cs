@@ -41,14 +41,14 @@ public record GetFileByNameQuery : IRequest<(FileDto? File, Stream? Content)>
             
             var stream = await _fileStorageService.DownloadFileAsync(request.FileName);
             
-            // В реальном приложении здесь нужно определить тип содержимого и размер файла
-            // Для простоты используем фиктивные значения
-            var fileDto = new FileDto(
-                request.FileName,
-                request.FileName,
-                "application/octet-stream",
-                $"/api/files/{request.FileName}",
-                stream.Length);
+            // В реальном приложении здесь нужно определить тип содержимого
+            // Для простоты используем фиктивное значение
+            var fileDto = new FileDto
+            {
+                FileName = request.FileName,
+                ContentType = "application/octet-stream",
+                Data = stream
+            };
                 
             return (fileDto, stream);
         }
