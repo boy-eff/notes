@@ -6,7 +6,8 @@ namespace Notes.Application.Common.Interfaces;
 /// Интерфейс репозитория.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
-public interface IRepository<TEntity> where TEntity : class
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
+public interface IRepository<TEntity, TId> where TEntity : class
 {
     /// <summary>
     /// Получить все сущности.
@@ -19,7 +20,7 @@ public interface IRepository<TEntity> where TEntity : class
     /// </summary>
     /// <param name="id">ID сущности.</param>
     /// <returns>Сущность.</returns>
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(TId id);
 
     /// <summary>
     /// Найти сущности по условию.
@@ -44,5 +45,5 @@ public interface IRepository<TEntity> where TEntity : class
     /// Удалить сущность.
     /// </summary>
     /// <param name="id">ID сущности для удаления.</param>
-    Task DeleteAsync(int id);
+    Task DeleteAsync(TId id);
 } 

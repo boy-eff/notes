@@ -1,14 +1,19 @@
-﻿namespace Notes.Domain.Entities;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Notes.Domain.Entities;
 
 /// <summary>
 /// Сущность записки.
 /// </summary>
-public class Note(int id, string content, ICollection<string> tags, ICollection<string> attachments)
+public class Note(ObjectId id, string content, ICollection<string> tags, ICollection<string> attachments)
 {
     /// <summary>
     /// Идентификатор
     /// </summary>
-    public int Id { get; set; } = id;
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public ObjectId Id { get; set; } = id;
 
     /// <summary>
     /// Содержание

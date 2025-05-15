@@ -13,8 +13,7 @@ public class UpdateNoteCommandValidator : AbstractValidator<UpdateNoteCommand>
     public UpdateNoteCommandValidator()
     {
         RuleFor(x => x.Id)
-            .GreaterThan(0)
-            .WithMessage("ID записки должен быть больше 0.");
+            .NotEmpty();
 
         RuleFor(x => x.Data.Content)
             .NotEmpty()

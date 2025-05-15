@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService, Note } from '../../services/api.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiService } from '../../services/api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MarkdownComponent } from 'ngx-markdown';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
+import { Subscription } from 'rxjs';
+import { Note } from '../../models/note.interface';
 
 /**
  * Компонент для отображения списка заметок.
@@ -20,12 +22,12 @@ import { MarkdownComponent } from 'ngx-markdown';
     MatIconModule,
     MatProgressSpinnerModule,
     RouterModule,
-    MarkdownComponent
+    TruncatePipe
   ],
-  templateUrl: './notes.component.html',
-  styleUrl: './notes.component.css'
+  templateUrl: './note-list.component.html',
+  styleUrl: './note-list.component.css'
 })
-export class NotesComponent implements OnInit {
+export class NoteListComponent implements OnInit, OnDestroy {
   /**
    * Флаг, указывающий на режим отображения заметок.
    * <see langword="true"/> - режим сетки, <see langword="false"/> - режим списка.
@@ -42,17 +44,37 @@ export class NotesComponent implements OnInit {
    */
   isLoading = true;
 
-  constructor(private api: ApiService) {}
+  /**
+   * Тип заметок для фильтрации.
+   */
+  noteType: string | null = null;
+
+  private routeSubscription?: Subscription;
+
+  constructor(
+    private api: ApiService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.loadNotes();
+    this.routeSubscription = this.route.queryParamMap.subscribe(params => {
+      this.noteType = params.get('noteType');
+      this.loadNotes();
+    });
+  }
+
+  ngOnDestroy() {
+    this.routeSubscription?.unsubscribe();
   }
 
   /**
    * Загружает заметки с сервера.
    */
   loadNotes() {
-    this.api.getNotes().subscribe({
+    this.isLoading = true;
+    this.notes = [];
+    this.api.getNotes(this.noteType).subscribe({
       next: (data) => {
         this.notes = data;
         this.isLoading = false;
@@ -72,5 +94,13 @@ export class NotesComponent implements OnInit {
     this.api.deleteNote(noteId).subscribe(() => {
       this.notes = this.notes.filter(n => n.id !== noteId);
     });
+  }
+
+  /**
+   * Переходит на страницу заметки.
+   * @param noteId - ID заметки.
+   */
+  navigateToNote(noteId: string) {
+    this.router.navigate(['/notes', noteId]);
   }
 }

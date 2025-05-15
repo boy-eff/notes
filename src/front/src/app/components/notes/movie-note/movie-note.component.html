@@ -1,0 +1,22 @@
+<div class="movie-note-container">
+  <!-- Основной блок информации -->
+  <div class="main-content">
+    <div class="markdown-content">
+      <markdown [data]="getMarkdownContent()"></markdown>
+    </div>
+  </div>
+
+  <!-- Блок дополнительной информации -->
+  <div class="side-content">
+    <!-- Галерея (заглушка) -->
+    <div class="gallery-placeholder">
+      <p>Галерея будет добавлена позже</p>
+    </div>
+
+    <!-- Метаинформация -->
+    <div class="info-section">
+      <h3>Информация</h3>
+      <markdown [data]="note.info"></markdown>
+    </div>
+  </div>
+</div>

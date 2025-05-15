@@ -13,7 +13,7 @@ public class DeleteNoteCommandValidator : AbstractValidator<DeleteNoteCommand>
     public DeleteNoteCommandValidator()
     {
         RuleFor(x => x.Id)
-            .GreaterThan(0)
-            .WithMessage("ID записки должен быть больше 0.");
+            .NotEmpty()
+            .WithMessage("ID записки должен быть пустым.");
     }
 } 

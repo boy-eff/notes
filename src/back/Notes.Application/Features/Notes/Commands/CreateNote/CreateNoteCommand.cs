@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using Notes.Application.Common.CQRS.Commands.Create;
 using Notes.Application.Common.Interfaces;
 using Notes.Application.Features.Notes.Dto;
@@ -13,8 +14,8 @@ public record CreateNoteCommand : CreateCommand<Note, CreateNoteDto>
     /// <summary>
     /// Обработчик команды создания записки.
     /// </summary>
-    private class Handler(IRepository<Note> repository, IMapperService mapper) 
-        : CreateCommandHandler<Note, CreateNoteDto, CreateNoteCommand>(repository, mapper)
+    private class Handler(IRepository<Note, ObjectId> repository, IMapperService mapper) 
+        : CreateCommandHandler<Note, ObjectId, CreateNoteDto, CreateNoteCommand>(repository, mapper)
     {
     } 
 } 

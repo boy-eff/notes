@@ -9,9 +9,10 @@ namespace Notes.Application.Common.CQRS.Queries.GetAll;
 /// Базовый обработчик запроса получения всех сущностей.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
 /// <typeparam name="TCommand">Тип команды.</typeparam>
-public abstract class GetAllQueryHandler<TEntity, TDto, TCommand>(IRepository<TEntity> repository, IMapperService mapper) 
+public abstract class GetAllQueryHandler<TEntity, TId, TDto, TCommand>(IRepository<TEntity, TId> repository, IMapperService mapper) 
     : IRequestHandler<TCommand, IEnumerable<TDto>> 
     where TEntity : class
     where TCommand : GetAllQuery<TEntity, TDto>

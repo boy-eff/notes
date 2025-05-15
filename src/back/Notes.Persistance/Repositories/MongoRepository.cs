@@ -14,12 +14,13 @@ namespace Notes.Persistance.Repositories;
 /// Реализация репозитория MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
-public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : class
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
+public class MongoRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class
 {
     private readonly IMongoCollection<TEntity> _collection;
 
     /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="MongoRepository{TEntity}"/>.
+    /// Инициализирует новый экземпляр класса <see cref="MongoRepository{TEntity, TId}"/>.
     /// </summary>
     /// <param name="configuration">Конфигурация MongoDB.</param>
     public MongoRepository(IOptions<MongoDbConfiguration> configuration)
@@ -37,7 +38,7 @@ public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : cla
     }
 
     /// <inheritdoc />
-    public async Task<TEntity?> GetByIdAsync(int id)
+    public async Task<TEntity?> GetByIdAsync(TId id)
     {
         var filter = Builders<TEntity>.Filter.Eq("Id", id);
         return await _collection.Find(filter).FirstOrDefaultAsync();
@@ -64,7 +65,7 @@ public class MongoRepository<TEntity> : IRepository<TEntity> where TEntity : cla
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(TId id)
     {
         var filter = Builders<TEntity>.Filter.Eq("Id", id);
         await _collection.DeleteOneAsync(filter);

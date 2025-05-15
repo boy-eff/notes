@@ -6,11 +6,12 @@ namespace Notes.Application.Common.CQRS.Queries.GetById;
 /// Базовый класс запроса получения сущности по ID.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
-public record GetByIdQuery<TEntity, TDto> : IRequest<TDto?> where TEntity : class
+public record GetByIdQuery<TEntity, TId, TDto> : IRequest<TDto?> where TEntity : class
 {
     /// <summary>
     /// ID сущности.
     /// </summary>
-    public int Id { get; init; }
+    public TId Id { get; init; }
 } 

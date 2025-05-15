@@ -1,0 +1,16 @@
+<div class="note-container">
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="note">
+      <app-movie-note *ngIf="note.type === 'movie'" [note]="asMovieNote(note)"></app-movie-note>
+      <div *ngIf="note.type !== 'movie'" class="unsupported-note">
+        <p>Неподдерживаемый тип заметки: {{ note.type }}</p>
+      </div>
+    </ng-container>
+    <div *ngIf="!note" class="not-found">
+      <p>Заметка не найдена</p>
+    </div>
+  </ng-container>
+  <div *ngIf="isLoading" class="loading">
+    <p>Загрузка...</p>
+  </div>
+</div>

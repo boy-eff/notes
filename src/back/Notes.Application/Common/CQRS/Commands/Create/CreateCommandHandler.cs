@@ -8,9 +8,10 @@ namespace Notes.Application.Common.CQRS.Commands.Create;
 /// Базовый обработчик команды создания сущности.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
 /// <typeparam name="TCommand">Тип команды.</typeparam>
-public abstract class CreateCommandHandler<TEntity, TDto, TCommand>(IRepository<TEntity> repository, IMapperService mapper) 
+public abstract class CreateCommandHandler<TEntity, TId, TDto, TCommand>(IRepository<TEntity, TId> repository, IMapperService mapper) 
     : IRequestHandler<TCommand> 
     where TEntity : class 
     where TDto : class

@@ -1,4 +1,5 @@
 using MediatR;
+using MongoDB.Bson;
 using Notes.Application.Common.CQRS.Queries.GetById;
 using Notes.Application.Common.Interfaces;
 using Notes.Application.Features.Notes.Dto;
@@ -9,18 +10,13 @@ namespace Notes.Application.Features.Notes.Queries.GetNoteById;
 /// <summary>
 /// Запрос на получение записки по ID.
 /// </summary>
-public record GetNoteByIdQuery : GetByIdQuery<Note, NoteDto>
+public record GetNoteByIdQuery : GetByIdQuery<Note, ObjectId, NoteDto>
 {
-    /// <summary>
-    /// ID записки.
-    /// </summary>
-    public int Id { get; init; }
-    
     /// <summary>
     /// Обработчик запроса на получение записки по ID.
     /// </summary>
-    private class Handler(IRepository<Note> repository, IMapperService mapper) 
-        : GetByIdQueryHandler<Note, NoteDto, GetNoteByIdQuery>(repository, mapper)
+    private class Handler(IRepository<Note, ObjectId> repository, IMapperService mapper) 
+        : GetByIdQueryHandler<Note, ObjectId, NoteDto, GetNoteByIdQuery>(repository, mapper)
     {
     } 
 } 

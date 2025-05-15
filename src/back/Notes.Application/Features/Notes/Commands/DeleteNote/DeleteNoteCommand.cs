@@ -1,4 +1,5 @@
 using MediatR;
+using MongoDB.Bson;
 using Notes.Application.Common.CQRS.Commands.Delete;
 using Notes.Application.Common.Interfaces;
 using Notes.Domain.Entities;
@@ -8,17 +9,12 @@ namespace Notes.Application.Features.Notes.Commands.DeleteNote;
 /// <summary>
 /// Команда удаления записки.
 /// </summary>
-public record DeleteNoteCommand : DeleteCommand<Note>
+public record DeleteNoteCommand : DeleteCommand<Note, ObjectId>
 {
-    /// <summary>
-    /// ID записки.
-    /// </summary>
-    public int Id { get; init; }
-    
     /// <summary>
     /// Обработчик команды удаления записки.
     /// </summary>
-    private class Handler(IRepository<Note> noteRepository) : DeleteCommandHandler<Note, DeleteNoteCommand>(noteRepository)
+    private class Handler(IRepository<Note, ObjectId> noteRepository) : DeleteCommandHandler<Note, ObjectId, DeleteNoteCommand>(noteRepository)
     {
     }
 } 

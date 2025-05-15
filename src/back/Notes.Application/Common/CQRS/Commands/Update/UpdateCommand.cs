@@ -6,15 +6,16 @@ namespace Notes.Application.Common.CQRS.Commands.Update;
 /// Базовый класс команды обновления сущности.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
-public record UpdateCommand<TEntity, TDto> : IRequest
+public record UpdateCommand<TEntity, TId, TDto> : IRequest
     where TEntity : class 
     where TDto : class
 {
     /// <summary>
     /// ID сущности.
     /// </summary>
-    public int Id { get; init; }
+    public TId Id { get; init; }
 
     /// <summary>
     /// Данные для обновления сущности.

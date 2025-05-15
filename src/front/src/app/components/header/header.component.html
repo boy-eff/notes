@@ -1,0 +1,5 @@
+<mat-toolbar color="primary">
+    <button mat-button *ngFor="let noteType of noteTypes" (click)="switchNoteType(noteType)">
+        {{ getNoteTypeLabel(noteType) }}
+    </button>
+</mat-toolbar>

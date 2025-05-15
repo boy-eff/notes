@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Notes.Application.Features.Files.Commands.AttachFileToNote;
 using Notes.Application.Features.Notes.Commands.CreateNote;
 using Notes.Application.Features.Notes.Commands.DeleteNote;
@@ -8,6 +9,7 @@ using Notes.Application.Features.Notes.Commands.UpdateNote;
 using Notes.Application.Features.Notes.Dto;
 using Notes.Application.Features.Notes.Queries.GetNoteById;
 using Notes.Application.Features.Notes.Queries.GetNotes;
+using Notes.WebApi.Extensions;
 
 namespace Notes.WebApi.Controllers;
 
@@ -47,8 +49,8 @@ public class NotesController : ControllerBase
     /// <param name="id">ID записки.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Записка.</returns>
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<NoteDto>> Get(int id, CancellationToken cancellationToken)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<NoteDto>> Get(ObjectId id, CancellationToken cancellationToken)
     {
         var note = await _mediator.Send(new GetNoteByIdQuery { Id = id }, cancellationToken);
         if (note == null)
@@ -81,14 +83,21 @@ public class NotesController : ControllerBase
     /// <param name="command">Команда обновления записки.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Обновленная записка.</returns>
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<ActionResult<NoteDto>> Update(
-        UpdateNoteCommand command,
+        ObjectId id,
+        UpdateNoteDto dto,
         CancellationToken cancellationToken)
     {
-        var note = await _mediator.Send(command, cancellationToken);
+        var command = new UpdateNoteCommand()
+        {
+            Id = id,
+            Data = dto
+        };
+        
+        await _mediator.Send(command, cancellationToken);
 
-        return Ok(note);
+        return Ok();
     }
 
     /// <summary>
@@ -97,8 +106,8 @@ public class NotesController : ControllerBase
     /// <param name="id">ID записки.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Результат удаления.</returns>
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(ObjectId id, CancellationToken cancellationToken)
     {
         await _mediator.Send(new DeleteNoteCommand() { Id = id }, cancellationToken);
 
@@ -115,13 +124,13 @@ public class NotesController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AttachFileToNote(int noteId, IFormFile file)
+    public async Task<IActionResult> AttachFileToNote(ObjectId noteId, IFormFile file)
     {
         using var stream = file.OpenReadStream();
         var command = new AttachFileToNoteCommand
         {
             NoteId = noteId,
-            File = file
+            File = file.ToFileDto()
         };
         
         var fileUrl = await _mediator.Send(command);

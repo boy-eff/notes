@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using Notes.Application.Common.CQRS.Queries.GetAll;
 using Notes.Application.Common.Interfaces;
 using Notes.Application.Features.Notes.Dto;
@@ -13,8 +14,8 @@ public record GetAllNotesQuery : GetAllQuery<Note, NoteDto>
     /// <summary>
     /// Обработчик запроса на получение всех записок.
     /// </summary>
-    private class GetAllNotesQueryHandler(IRepository<Note> repository, IMapperService mapper) 
-        : GetAllQueryHandler<Note, NoteDto, GetAllNotesQuery>(repository, mapper)
+    private class GetAllNotesQueryHandler(IRepository<Note, ObjectId> repository, IMapperService mapper) 
+        : GetAllQueryHandler<Note, ObjectId, NoteDto, GetAllNotesQuery>(repository, mapper)
     {
     } 
 }

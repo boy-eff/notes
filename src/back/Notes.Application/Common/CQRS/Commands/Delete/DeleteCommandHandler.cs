@@ -7,11 +7,12 @@ namespace Notes.Application.Common.CQRS.Commands.Delete;
 /// Базовый обработчик команды удаления сущности.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
 /// <typeparam name="TCommand">Тип команды.</typeparam>
-public abstract class DeleteCommandHandler<TEntity, TCommand>(IRepository<TEntity> repository) 
+public abstract class DeleteCommandHandler<TEntity, TId, TCommand>(IRepository<TEntity, TId> repository) 
     : IRequestHandler<TCommand> 
     where TEntity : class
-    where TCommand : DeleteCommand<TEntity>
+    where TCommand : DeleteCommand<TEntity, TId>
 {
     /// <inheritdoc />
     public async Task Handle(TCommand request, CancellationToken cancellationToken)

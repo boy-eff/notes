@@ -1,15 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-/**
- * Интерфейс, описывающий структуру заметки.
- */
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-}
+import { Note } from '../models/note.interface';
 
 /**
  * Сервис для работы с API заметок.
@@ -23,11 +15,16 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   /**
-   * Получает список всех заметок.
+   * Получает список заметок.
+   * @param noteType - Тип заметок для фильтрации.
    * @returns Наблюдаемый объект с массивом заметок.
    */
-  getNotes(): Observable<Note[]> {
-    return this.http.get<Note[]>(`${this.baseUrl}/notes`);
+  getNotes(noteType?: string | null): Observable<Note[]> {
+    let params = new HttpParams();
+    if (noteType) {
+      params = params.set('noteType', noteType.toLowerCase());
+    }
+    return this.http.get<Note[]>(`${this.baseUrl}/notes`, { params });
   }
 
   /**
@@ -56,5 +53,14 @@ export class ApiService {
    */
   deleteNote(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/notes/${id}`);
+  }
+
+  /**
+   * Получает заметку по ID.
+   * @param id - ID заметки.
+   * @returns Наблюдаемый объект с заметкой.
+   */
+  getNote(id: string): Observable<Note> {
+    return this.http.get<Note>(`${this.baseUrl}/notes/${id}`);
   }
 }

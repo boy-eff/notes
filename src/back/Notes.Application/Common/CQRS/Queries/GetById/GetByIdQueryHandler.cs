@@ -8,12 +8,13 @@ namespace Notes.Application.Common.CQRS.Queries.GetById;
 /// Базовый обработчик запроса получения сущности по ID.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности.</typeparam>
+/// <typeparam name="TId">Тип идентификатора сущности.</typeparam>
 /// <typeparam name="TDto">Тип DTO.</typeparam>
 /// <typeparam name="TCommand">Тип команды.</typeparam>
-public class GetByIdQueryHandler<TEntity, TDto, TCommand>(IRepository<TEntity> repository, IMapperService mapper) 
+public class GetByIdQueryHandler<TEntity, TId, TDto, TCommand>(IRepository<TEntity, TId> repository, IMapperService mapper) 
     : IRequestHandler<TCommand, TDto?> 
     where TEntity : class
-    where TCommand : GetByIdQuery<TEntity, TDto>
+    where TCommand : GetByIdQuery<TEntity, TId, TDto>
 {
     /// <inheritdoc />
     public async Task<TDto?> Handle(TCommand request, CancellationToken cancellationToken)

@@ -15,23 +15,7 @@ public class NoteMappingStrategies
                 throw new ArgumentException("DTO является имутабельным. Невозможно замапить на текущую сущность");
             }
         
-            return new NoteDto(source.Id, source.Content, source.Tags, source.Attachments);
-        }
-    }
-    
-    public class ToEntity : IMappingStrategy<NoteDto, Note>
-    {
-        public Note Map(NoteDto source, Note? target = null)
-        {
-            if (target is not null)
-            {
-                target.Id = source.Id;
-                target.Content = source.Content;
-                target.Tags = source.Tags;
-                target.Attachments = source.Attachments;
-            }
-        
-            return new Note(source.Id, source.Content, source.Tags, source.Attachments);
+            return new NoteDto(source.Id.ToString(), source.Content, source.Tags, source.Attachments);
         }
     }
 
@@ -43,10 +27,9 @@ public class NoteMappingStrategies
             {
                 target.Content = source.Content;
                 target.Tags = source.Tags;
-                target.Attachments = source.Attachments;
             }
         
-            return new Note(0, source.Content, source.Tags, source.Attachments);
+            return new Note(default, source.Content, source.Tags, []);
         }
     }
 
@@ -58,10 +41,9 @@ public class NoteMappingStrategies
             {
                 target.Content = source.Content;
                 target.Tags = source.Tags;
-                target.Attachments = source.Attachments;
             }
         
-            return new Note(0, source.Content, source.Tags, source.Attachments);
+            return new Note(default, source.Content, source.Tags, []);
         }
     }
 }

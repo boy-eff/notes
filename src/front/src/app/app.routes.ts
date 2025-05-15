@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
-import { NotesComponent } from './components/notes/notes.component';
+import { NoteListComponent } from './components/note-list/note-list.component';
+import { NoteComponent } from './components/note/note.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/notes', pathMatch: 'full' },
-    { path: 'notes', component: NotesComponent }
+    { path: 'notes', component: NoteListComponent },
+    { path: 'notes/:id', component: NoteComponent }
 ];
