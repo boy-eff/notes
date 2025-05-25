@@ -15,6 +15,23 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   /**
+   * Возвращает базовый URL API.
+   * @returns Базовый URL в виде строки.
+   */
+  getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
+  /**
+   * Формирует URL для загрузки файла.
+   * @param filename - Имя файла.
+   * @returns Полный URL для загрузки файла.
+   */
+  getFileUrl(filename: string): string {
+    return `${this.baseUrl}/files/download/${filename}`;
+  }
+
+  /**
    * Получает список заметок.
    * @param noteType - Тип заметок для фильтрации.
    * @returns Наблюдаемый объект с массивом заметок.

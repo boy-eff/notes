@@ -18,4 +18,9 @@ export interface MovieNote extends Note {
    * Метаинформация о фильме.
    */
   info: string;
+
+  /**
+   * Список вложений (имен файлов) к заметке.
+   */
+  attachments: string[];
 } 

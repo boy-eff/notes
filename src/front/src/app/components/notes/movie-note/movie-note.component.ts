@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { MovieNote } from '../../../models/movie-note.interface';
+import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-movie-note',
@@ -12,6 +13,17 @@ import { MovieNote } from '../../../models/movie-note.interface';
 })
 export class MovieNoteComponent {
   @Input() note!: MovieNote;
+
+  constructor(private apiService: ApiService) {}
+
+  /**
+   * Получает URL для отображения вложения.
+   * @param filename Имя файла вложения.
+   * @returns Строка URL для изображения.
+   */
+  getAttachmentUrl(filename: string): string {
+    return this.apiService.getFileUrl(filename);
+  }
 
   /**
    * Формирует markdown контент из synopsis и opinion.

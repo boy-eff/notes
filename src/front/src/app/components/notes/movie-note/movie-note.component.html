@@ -8,9 +8,11 @@
 
   <!-- Блок дополнительной информации -->
   <div class="side-content">
-    <!-- Галерея (заглушка) -->
-    <div class="gallery-placeholder">
-      <p>Галерея будет добавлена позже</p>
+    <!-- Галерея -->
+    <div class="gallery">
+      <div *ngFor="let filename of note.attachments" class="gallery-item">
+        <img [src]="getAttachmentUrl(filename)" alt="Image from gallery">
+      </div>
     </div>
 
     <!-- Метаинформация -->
