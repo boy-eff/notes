@@ -10,8 +10,8 @@
   <div class="side-content">
     <!-- Галерея -->
     <div class="gallery">
-      <div *ngFor="let filename of note.attachments" class="gallery-item">
-        <img [src]="getAttachmentUrl(filename)" alt="Image from gallery">
+      <div *ngFor="let filename of note.attachments; let i = index" class="gallery-item" (click)="openLightbox(i)">
+        <img [src]="getAttachmentUrl(filename)" alt="Изображение из галереи {{i + 1}}">
       </div>
     </div>
 

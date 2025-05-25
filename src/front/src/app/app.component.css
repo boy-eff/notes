@@ -5,3 +5,6 @@
 * {
   box-sizing: border-box;
 }
+.fadeInOverlay {
+  max-height: 200px;
+}
