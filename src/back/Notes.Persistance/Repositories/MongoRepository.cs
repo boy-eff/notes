@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Notes.Application.Common.Interfaces;
-using Notes.Domain.Entities;
 using Notes.Persistance.Configuration;
 
 namespace Notes.Persistance.Repositories;
@@ -32,9 +29,11 @@ public class MongoRepository<TEntity, TId> : IRepository<TEntity, TId> where TEn
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IEnumerable<TEntity>> GetAllAsync(IRepositorySpecification<TEntity> specification)
     {
-        return await _collection.Find(_ => true).ToListAsync();
+        var query = _collection.AsQueryable();
+        query = specification.BuildFilters(query);
+        return await query.ToListAsync();
     }
 
     /// <inheritdoc />

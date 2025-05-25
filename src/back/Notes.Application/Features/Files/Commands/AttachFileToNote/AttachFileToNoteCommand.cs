@@ -25,7 +25,7 @@ public class AttachFileToNoteCommand : IRequest<string>
 /// <summary>
 /// Обработчик команды прикрепления файла к заметке.
 /// </summary>
-public class AttachFileToNoteCommandHandler(IFileStorageService fileStorageService, IRepository<Note, ObjectId> noteRepository) : IRequestHandler<AttachFileToNoteCommand, string>
+public class AttachFileToNoteCommandHandler(IFileStorageService fileStorageService, IRepository<NoteBase, ObjectId> noteRepository) : IRequestHandler<AttachFileToNoteCommand, string>
 {
     
     /// <inheritdoc />

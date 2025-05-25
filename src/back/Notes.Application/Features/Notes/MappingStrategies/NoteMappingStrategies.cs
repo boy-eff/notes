@@ -6,44 +6,23 @@ namespace Notes.Application.Features.Notes.MappingStrategies;
 
 public class NoteMappingStrategies
 {
-    public class ToDto : IMappingStrategy<Note, NoteDto>
+    public class ToDto : IMappingStrategy<NoteBase, NoteBaseDto>
     {
-        public NoteDto Map(Note source, NoteDto? target = default)
+        public NoteBaseDto Map(NoteBase source, NoteBaseDto? target = default)
         {
             if (target is not null)
             {
                 throw new ArgumentException("DTO является имутабельным. Невозможно замапить на текущую сущность");
             }
-        
-            return new NoteDto(source.Id.ToString(), source.Content, source.Tags, source.Attachments);
-        }
-    }
 
-    public class CreateDtoToEntity : IMappingStrategy<CreateNoteDto, Note>
-    {
-        public Note Map(CreateNoteDto source, Note? target = null)
-        {
-            if (target is not null)
+            return source switch
             {
-                target.Content = source.Content;
-                target.Tags = source.Tags;
-            }
-        
-            return new Note(default, source.Content, source.Tags, []);
-        }
-    }
-
-    public class UpdateDtoToEntity : IMappingStrategy<UpdateNoteDto, Note>
-    {
-        public Note Map(UpdateNoteDto source, Note? target = null)
-        {
-            if (target is not null)
-            {
-                target.Content = source.Content;
-                target.Tags = source.Tags;
-            }
-        
-            return new Note(default, source.Content, source.Tags, []);
+                GeneralNote generalNote => new GeneralNoteDto(generalNote.Id.ToString(), generalNote.Title, generalNote.Attachments,
+                    generalNote.Content, generalNote.Type),
+                MovieNote movieNote => new MovieNoteDto(movieNote.Id.ToString(), movieNote.Title, movieNote.Attachments,
+                    movieNote.Synopsis, movieNote.Opinion, movieNote.Info, movieNote.Type),
+                _ => new NoteBaseDto(source.Id.ToString(), source.Title, source.Attachments, source.Type)
+            };
         }
     }
 }

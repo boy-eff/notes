@@ -20,7 +20,11 @@ public abstract class GetAllQueryHandler<TEntity, TId, TDto, TCommand>(IReposito
     /// <inheritdoc />
     public async Task<IEnumerable<TDto>> Handle(TCommand request, CancellationToken cancellationToken)
     {
-        var entities = await repository.GetAllAsync();
+        await Task.Delay(1000);
+        var specification = ConstructSpecification(request);
+        var entities = await repository.GetAllAsync(specification);
         return entities.Select(x => mapper.Map<TEntity, TDto>(x));
     }
+    
+    public abstract IRepositorySpecification<TEntity> ConstructSpecification(TCommand request);
 } 

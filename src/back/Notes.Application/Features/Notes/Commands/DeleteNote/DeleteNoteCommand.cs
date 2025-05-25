@@ -9,12 +9,12 @@ namespace Notes.Application.Features.Notes.Commands.DeleteNote;
 /// <summary>
 /// Команда удаления записки.
 /// </summary>
-public record DeleteNoteCommand : DeleteCommand<Note, ObjectId>
+public record DeleteNoteCommand : DeleteCommand<NoteBase, ObjectId>
 {
     /// <summary>
     /// Обработчик команды удаления записки.
     /// </summary>
-    private class Handler(IRepository<Note, ObjectId> noteRepository) : DeleteCommandHandler<Note, ObjectId, DeleteNoteCommand>(noteRepository)
+    private class Handler(IRepository<NoteBase, ObjectId> noteRepository) : DeleteCommandHandler<NoteBase, ObjectId, DeleteNoteCommand>(noteRepository)
     {
     }
 } 

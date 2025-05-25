@@ -2,6 +2,8 @@ using MongoDB.Bson;
 using Notes.Application.Common.CQRS.Queries.GetAll;
 using Notes.Application.Common.Interfaces;
 using Notes.Application.Features.Notes.Dto;
+using Notes.Application.Features.Notes.Specifications;
+using Notes.Domain.Constants;
 using Notes.Domain.Entities;
 
 namespace Notes.Application.Features.Notes.Queries.GetNotes;
@@ -9,13 +11,26 @@ namespace Notes.Application.Features.Notes.Queries.GetNotes;
 /// <summary>
 /// Запрос на получение всех записок.
 /// </summary>
-public record GetAllNotesQuery : GetAllQuery<Note, NoteDto>
+public record GetAllNotesQuery(GetAllNotesQueryParameters Parameters) : GetAllQuery<NoteBase, NoteBaseDto>
 {
     /// <summary>
     /// Обработчик запроса на получение всех записок.
     /// </summary>
-    private class GetAllNotesQueryHandler(IRepository<Note, ObjectId> repository, IMapperService mapper) 
-        : GetAllQueryHandler<Note, ObjectId, NoteDto, GetAllNotesQuery>(repository, mapper)
+    private class GetAllNotesQueryHandler(IRepository<NoteBase, ObjectId> repository, IMapperService mapper) 
+        : GetAllQueryHandler<NoteBase, ObjectId, NoteBaseDto, GetAllNotesQuery>(repository, mapper)
     {
+        public override IRepositorySpecification<NoteBase> ConstructSpecification(GetAllNotesQuery request)
+        {
+            NoteType? noteType = null;
+            if (request.Parameters.NoteType is not null)
+            {
+                noteType = NoteType.GetByName(request.Parameters.NoteType);
+            }
+
+            return new NoteSpecification
+            {
+                NoteType = noteType
+            };
+        }
     } 
 }

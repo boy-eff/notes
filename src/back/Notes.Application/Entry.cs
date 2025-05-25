@@ -8,6 +8,9 @@ using Notes.Application.Features.Notes.Commands;
 using Notes.Application.Features.Notes.Dto;
 using Notes.Application.Features.Notes.MappingStrategies;
 using Notes.Application.Features.Notes.Queries;
+using Notes.Application.Services;
+using Notes.Application.Services.Interfaces;
+using Notes.Domain.Constants;
 using Notes.Domain.Entities;
 
 namespace Notes.Application;
@@ -30,6 +33,11 @@ public static class Entry
 
         // Регистрация валидаторов
         services.AddValidatorsFromAssembly(typeof(Entry).Assembly);
+
+        services.AddScoped<INoteParserFactory, NoteParserFactory>();
+        
+        services.AddKeyedScoped<INoteParser, MovieNoteParser>(NoteType.Movie.Name);
+        services.AddKeyedScoped<INoteParser, GeneralNoteParser>(NoteType.General.Name);
 
         // Регистрация маппинга
         var mapper = new MapperService();

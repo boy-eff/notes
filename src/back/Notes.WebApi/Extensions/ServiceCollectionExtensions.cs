@@ -12,6 +12,26 @@ namespace Notes.WebApi.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
+    /// Добавляет конфигурацию CORS в сервисы.
+    /// </summary>
+    /// <param name="services">Коллекция сервисов.</param>
+    /// <returns>Коллекция сервисов.</returns>
+    public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+
+        return services;
+    }
+
+    /// <summary>
     /// Добавляет конфигурацию Keycloak в сервисы.
     /// </summary>
     /// <param name="services">Коллекция сервисов.</param>

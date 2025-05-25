@@ -1,11 +1,9 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Notes.Application.Features.Files.Commands.AttachFileToNote;
-using Notes.Application.Features.Notes.Commands.CreateNote;
 using Notes.Application.Features.Notes.Commands.DeleteNote;
-using Notes.Application.Features.Notes.Commands.UpdateNote;
+using Notes.Application.Features.Notes.Commands.ImportNoteFromFile;
 using Notes.Application.Features.Notes.Dto;
 using Notes.Application.Features.Notes.Queries.GetNoteById;
 using Notes.Application.Features.Notes.Queries.GetNotes;
@@ -34,12 +32,13 @@ public class NotesController : ControllerBase
     /// <summary>
     /// Получает все записки.
     /// </summary>
+    /// <param name="parameters">Параметры запроса</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Список записок.</returns>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<NoteDto>>> GetAll(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<NoteBaseDto>>> GetAll([FromQuery] GetAllNotesQueryParameters parameters, CancellationToken cancellationToken)
     {
-        var notes = await _mediator.Send(new GetAllNotesQuery(), cancellationToken);
+        var notes = await _mediator.Send(new GetAllNotesQuery(parameters), cancellationToken);
         return Ok(notes);
     }
 
@@ -50,7 +49,7 @@ public class NotesController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Записка.</returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<NoteDto>> Get(ObjectId id, CancellationToken cancellationToken)
+    public async Task<ActionResult<NoteBaseDto>> Get(ObjectId id, CancellationToken cancellationToken)
     {
         var note = await _mediator.Send(new GetNoteByIdQuery { Id = id }, cancellationToken);
         if (note == null)
@@ -59,45 +58,6 @@ public class NotesController : ControllerBase
         }
 
         return Ok(note);
-    }
-
-    /// <summary>
-    /// Создает новую записку.
-    /// </summary>
-    /// <param name="command">Команда создания записки.</param>
-    /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns>Созданная записка.</returns>
-    [HttpPost]
-    public async Task<ActionResult> Create(
-        [FromBody] CreateNoteCommand command,
-        CancellationToken cancellationToken)
-    {
-        await _mediator.Send(command, cancellationToken);
-        return Created();
-    }
-
-    /// <summary>
-    /// Обновляет существующую записку.
-    /// </summary>
-    /// <param name="id">ID записки.</param>
-    /// <param name="command">Команда обновления записки.</param>
-    /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns>Обновленная записка.</returns>
-    [HttpPut("{id}")]
-    public async Task<ActionResult<NoteDto>> Update(
-        ObjectId id,
-        UpdateNoteDto dto,
-        CancellationToken cancellationToken)
-    {
-        var command = new UpdateNoteCommand()
-        {
-            Id = id,
-            Data = dto
-        };
-        
-        await _mediator.Send(command, cancellationToken);
-
-        return Ok();
     }
 
     /// <summary>
@@ -120,13 +80,12 @@ public class NotesController : ControllerBase
     /// <param name="noteId">ID заметки.</param>
     /// <param name="file">Файл для прикрепления.</param>
     /// <returns>URL прикрепленного файла.</returns>
-    [HttpPost("{noteId:int}/attach")]
+    [HttpPost("{noteId}/attach")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AttachFileToNote(ObjectId noteId, IFormFile file)
     {
-        using var stream = file.OpenReadStream();
         var command = new AttachFileToNoteCommand
         {
             NoteId = noteId,
@@ -135,5 +94,23 @@ public class NotesController : ControllerBase
         
         var fileUrl = await _mediator.Send(command);
         return Ok(fileUrl);
+    }
+
+    /// <summary>
+    /// Импортирует записку из файла.
+    /// </summary>
+    /// <param name="noteTypeId">Идентификатор типа записки.</param>
+    /// <param name="title">Заголовок.</param>
+    /// <param name="file">Файл для импорта.</param>
+    /// <returns>Результат импорта.</returns>
+    [HttpPost("import/{noteTypeId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ImportFromFile(int noteTypeId, string title, IFormFile file)
+    {
+        var command = new ImportNoteFromFileCommand(file.ToFileDto(), noteTypeId, title);
+        
+        await _mediator.Send(command);
+        return Ok();
     }
 } 

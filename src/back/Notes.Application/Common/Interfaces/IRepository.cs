@@ -13,7 +13,7 @@ public interface IRepository<TEntity, TId> where TEntity : class
     /// Получить все сущности.
     /// </summary>
     /// <returns>Коллекция сущностей.</returns>
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<IEnumerable<TEntity>> GetAllAsync(IRepositorySpecification<TEntity> specification);
 
     /// <summary>
     /// Получить сущность по ID.
