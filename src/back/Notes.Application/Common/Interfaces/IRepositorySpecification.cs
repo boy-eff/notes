@@ -1,6 +1,9 @@
-﻿namespace Notes.Application.Common.Interfaces;
+﻿using System.Linq.Expressions;
+using Notes.Application.Common.CQRS;
 
-public interface IRepositorySpecification<T>
+namespace Notes.Application.Common.Interfaces;
+
+public interface IRepositorySpecification<T> where T : class
 {
     IQueryable<T> BuildFilters(IQueryable<T> entities);
 }

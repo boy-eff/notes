@@ -1,13 +1,16 @@
 ﻿using Notes.Application.Services.Interfaces;
 using Notes.Domain.Entities;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Notes.Application.Services;
 
 /// <summary>
 /// Парсер заметок о фильмах.
 /// </summary>
-public class MovieNoteParser : INoteParser
+public partial class MovieNoteParser : INoteParser
 {
+    private static readonly Regex TagRemovalRegex = MyRegex();
     private const string MovieInfoSeparator = "## Movie Info";
     private const string SynopsisSeparator = "## Synopsis";
     private const string OpinionSeparator = "## Opinion";
@@ -19,6 +22,9 @@ public class MovieNoteParser : INoteParser
         var synopsisSection = ExtractSection(content, SynopsisSeparator, OpinionSeparator);
         var opinionSection = ExtractSection(content, OpinionSeparator, null);
 
+        synopsisSection = TagRemovalRegex.Replace(synopsisSection, string.Empty).Trim();
+        opinionSection = TagRemovalRegex.Replace(opinionSection, string.Empty).Trim();
+        
         return new MovieNote(
             default,
             title,
@@ -45,6 +51,9 @@ public class MovieNoteParser : INoteParser
             throw new ArgumentException($"Не найдена секция {endSeparator}");
         }
 
-        return content[startIndex..endIndex].Trim();
+        return content[startIndex..endIndex];
     }
+
+    [GeneratedRegex(@"\s*\[.*?::.*?\]\s*", RegexOptions.Compiled)]
+    private static partial Regex MyRegex();
 }

@@ -35,12 +35,20 @@ export class ApiService {
   /**
    * Получает список заметок.
    * @param noteType - Тип заметок для фильтрации.
+   * @param pageSize - Размер страницы.
+   * @param lastId - ID последнего элемента для курсорной пагинации.
    * @returns Наблюдаемый объект с массивом заметок.
    */
-  getNotes(noteType?: string | null): Observable<Note[]> {
+  getNotes(noteType?: string | null, pageSize?: number, lastId?: string): Observable<Note[]> {
     let params = new HttpParams();
     if (noteType) {
       params = params.set('noteType', noteType.toLowerCase());
+    }
+    if (pageSize) {
+      params = params.set('pageSize', pageSize.toString());
+    }
+    if (lastId) {
+      params = params.set('lastId', lastId);
     }
     return this.http.get<Note[]>(`${this.baseUrl}/notes`, { params });
   }

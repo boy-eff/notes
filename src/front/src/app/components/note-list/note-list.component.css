@@ -86,3 +86,15 @@
 :host {
   display: block;
 }
+
+.note-content p {
+  margin: 0;
+  color: #666;
+}
+
+.more-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}

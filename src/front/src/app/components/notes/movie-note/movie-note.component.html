@@ -9,6 +9,9 @@
   <!-- Блок дополнительной информации -->
   <div class="side-content">
     <!-- Галерея -->
+    <div *ngIf="!note.attachments || note.attachments.length === 0" class="gallery-placeholder">
+      <span>Нет изображений</span>
+    </div>
     <div class="gallery">
       <div *ngFor="let filename of note.attachments; let i = index" class="gallery-item" (click)="openLightbox(i)">
         <img [src]="getAttachmentUrl(filename)" alt="Изображение из галереи {{i + 1}}">
@@ -17,8 +20,29 @@
 
     <!-- Метаинформация -->
     <div class="info-section">
-      <h3>Информация</h3>
-      <markdown [data]="note.info"></markdown>
+      <div class="metadata" *ngIf="parsedInfo && getObjectKeys(parsedInfo).length > 0">
+        <h3>Детали фильма</h3>
+        <ul>
+          <li *ngIf="parsedInfo['date']"><strong>Дата просмотра:</strong> {{ parsedInfo['date'] }}</li>
+          <li *ngIf="parsedInfo['year']"><strong>Год:</strong> {{ parsedInfo['year'] }}</li>
+          <li *ngIf="parsedInfo['original_title']"><strong>Оригинальное название:</strong> <em>{{ parsedInfo['original_title'] }}</em></li>
+          <li *ngIf="parsedInfo['rating']"><strong>Оценка:</strong> <span class="tag" [ngClass]="getRatingClass(parsedInfo['rating'])">{{ parsedInfo['rating'] }}</span></li>
+          <li *ngIf="parsedInfo['director']"><strong>Режиссер:</strong> {{ parsedInfo['director'] }}</li>
+          <li *ngIf="parsedInfo['actors'] && parsedInfo['actors'].length > 0">
+            <strong>В ролях:</strong>
+            <ul class="actor-list">
+              <li *ngFor="let actor of parsedInfo['actors']">{{ actor }}</li>
+            </ul>
+          </li>
+          <li *ngIf="parsedInfo['tags'] && parsedInfo['tags'].length > 0">
+            <strong>Теги:</strong>
+            <span *ngFor="let tag of parsedInfo['tags']" class="tag">{{ tag }}</span>
+          </li>
+          <li *ngIf="parsedInfo['kinopoisk']">
+            <strong>Кинопоиск:</strong> <a [href]="parsedInfo['kinopoisk']" target="_blank" rel="noopener noreferrer">ссылка</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,11 +46,16 @@ export class NoteListComponent implements OnInit, OnDestroy {
    * Флаг, указывающий на состояние загрузки данных.
    */
   isLoading = true;
+  isMoreLoading = false;
 
   /**
    * Тип заметок для фильтрации.
    */
   noteType: string | null = null;
+  
+  private readonly pageSize = 50;
+  private lastId: string | undefined = undefined;
+  private allNotesLoaded = false;
 
   private routeSubscription?: Subscription;
 
@@ -79,9 +84,13 @@ export class NoteListComponent implements OnInit, OnDestroy {
   loadNotes() {
     this.isLoading = true;
     this.notes = [];
-    this.api.getNotes(this.noteType).subscribe({
+    this.lastId = undefined;
+    this.allNotesLoaded = false;
+    
+    this.api.getNotes(this.noteType, this.pageSize).subscribe({
       next: (data) => {
         this.notes = data;
+        this.updatePagingState(data);
         this.isLoading = false;
       },
       error: (err) => {
@@ -89,6 +98,48 @@ export class NoteListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  loadMoreNotes() {
+    if (this.isMoreLoading || this.allNotesLoaded) {
+      return;
+    }
+
+    this.isMoreLoading = true;
+    this.api.getNotes(this.noteType, this.pageSize, this.lastId).subscribe({
+      next: (data) => {
+        this.notes.push(...data);
+        this.updatePagingState(data);
+        this.isMoreLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading more notes:', err);
+        this.isMoreLoading = false;
+      }
+    });
+  }
+  
+  private updatePagingState(loadedNotes: Note[]) {
+    if (loadedNotes.length < this.pageSize) {
+      this.allNotesLoaded = true;
+    }
+    if (loadedNotes.length > 0) {
+      this.lastId = loadedNotes[loadedNotes.length - 1].id;
+    }
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    if (this.isLoading || this.isMoreLoading || this.allNotesLoaded) {
+      return;
+    }
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const scrollHeight = document.documentElement.scrollHeight;
+
+    if (scrollPosition >= scrollHeight - 20) {
+      this.loadMoreNotes();
+    }
   }
 
   /**

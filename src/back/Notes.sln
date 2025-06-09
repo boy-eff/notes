@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Domain", "Notes.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Infrastructure", "Notes.Infrastructure\Notes.Infrastructure.csproj", "{A3F31681-2C16-4330-A70D-35DD9E7AD98C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes.Tools", "Notes.Tools", "{51DB8AEA-EAB8-4149-8858-5D0DC501DD45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Tools.BatchImport", "Notes.Tools.BatchImport\Notes.Tools.BatchImport.csproj", "{97AE9464-3D7F-4E32-A43F-208A8F979FD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,12 @@ Global
 		{A3F31681-2C16-4330-A70D-35DD9E7AD98C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3F31681-2C16-4330-A70D-35DD9E7AD98C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3F31681-2C16-4330-A70D-35DD9E7AD98C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97AE9464-3D7F-4E32-A43F-208A8F979FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97AE9464-3D7F-4E32-A43F-208A8F979FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97AE9464-3D7F-4E32-A43F-208A8F979FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97AE9464-3D7F-4E32-A43F-208A8F979FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{97AE9464-3D7F-4E32-A43F-208A8F979FD1} = {51DB8AEA-EAB8-4149-8858-5D0DC501DD45}
 	EndGlobalSection
 EndGlobal

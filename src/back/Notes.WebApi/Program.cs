@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Notes.Application;
 using Notes.Infrastructure;
 using Notes.Persistance;
-using Notes.Persistance.Configuration;
 using Notes.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

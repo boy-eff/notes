@@ -11,7 +11,7 @@ namespace Notes.Application.Features.Notes.Queries.GetNotes;
 /// <summary>
 /// Запрос на получение всех записок.
 /// </summary>
-public record GetAllNotesQuery(GetAllNotesQueryParameters Parameters) : GetAllQuery<NoteBase, NoteBaseDto>
+public record GetAllNotesQuery(GetAllNotesQueryParameters Parameters) : GetAllQuery<NoteBase, NoteBaseDto>(Parameters)
 {
     /// <summary>
     /// Обработчик запроса на получение всех записок.
@@ -27,10 +27,7 @@ public record GetAllNotesQuery(GetAllNotesQueryParameters Parameters) : GetAllQu
                 noteType = NoteType.GetByName(request.Parameters.NoteType);
             }
 
-            return new NoteSpecification
-            {
-                NoteType = noteType
-            };
+            return new NoteSpecification(request.PageSize, request.PageNumber, request.LastId, noteType);
         }
     } 
 }
