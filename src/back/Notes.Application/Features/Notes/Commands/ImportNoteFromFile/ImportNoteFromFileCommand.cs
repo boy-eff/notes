@@ -13,7 +13,7 @@ namespace Notes.Application.Features.Notes.Commands.ImportNoteFromFile;
 /// <summary>
 /// Команда для импорта записки из файла.
 /// </summary>
-public record ImportNoteFromFileCommand(FileDto File, int NoteTypeId, string NoteTitle) : IRequest
+public record ImportNoteFromFileCommand(FileDto File, string NoteTypeName, string NoteTitle) : IRequest
 {
     /// <summary>
     /// Обработчик команды импорта записки из файла.
@@ -28,7 +28,7 @@ public record ImportNoteFromFileCommand(FileDto File, int NoteTypeId, string Not
             using var reader = new StreamReader(request.File.Data);
             var content = await reader.ReadToEndAsync(cancellationToken);
 
-            var noteType = NoteType.GetById(request.NoteTypeId);
+            var noteType = NoteType.GetByName(request.NoteTypeName);
             var parser = parserFactory.GetParser(noteType.Name);
             var note = parser.Parse(request.NoteTitle, content);
 

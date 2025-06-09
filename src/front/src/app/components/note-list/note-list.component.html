@@ -1,6 +1,6 @@
 <div class="toolbar">
   <div class="left">
-    <button mat-raised-button color="primary" routerLink="/notes/new">
+    <button mat-raised-button color="primary" *ngIf="isAuthenticated()" (click)="addNote()">
       <mat-icon>add</mat-icon> Новая заметка
     </button>
   </div>

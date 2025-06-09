@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Note } from '../models/note.interface';
+import { NoteType } from '../enums/note-type.enum';
 
 /**
  * Сервис для работы с API заметок.
@@ -79,5 +80,18 @@ export class ApiService {
    */
   getNote(id: string): Observable<Note> {
     return this.http.get<Note>(`${this.baseUrl}/notes/${id}`);
+  }
+
+  /**
+   * Импортирует заметку из файла.
+   * @param data - Данные для импорта, включая файл, тип заметки и название.
+   * @returns Наблюдаемый объект.
+   */
+  importNoteFromFile(data: { file: File, noteType: NoteType, title: string }): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', data.file, data.file.name);
+    formData.append('title', data.title);
+
+    return this.http.post<void>(`${this.baseUrl}/notes/import/${data.noteType}`, formData);
   }
 }

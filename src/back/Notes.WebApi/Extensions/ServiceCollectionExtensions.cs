@@ -51,12 +51,8 @@ public static class ServiceCollectionExtensions
         .AddJwtBearer(options =>
         {
             options.Authority = $"{keycloakConfig!.Authority}/realms/{keycloakConfig.Realm}";
-            options.Audience = keycloakConfig.ClientId;
+            options.Audience = keycloakConfig.Audience;
             options.RequireHttpsMetadata = false;
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true
-            };
         });
 
         return services;

@@ -35,6 +35,7 @@ public class FilesController : ControllerBase
     /// </summary>
     /// <param name="file">Файл для загрузки.</param>
     /// <returns>URL загруженного файла.</returns>
+    [Authorize]
     [HttpPost("upload")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -69,6 +70,7 @@ public class FilesController : ControllerBase
     /// </summary>
     /// <param name="fileName">Имя файла.</param>
     /// <returns>Результат операции.</returns>
+    [Authorize]
     [HttpDelete("{fileName}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

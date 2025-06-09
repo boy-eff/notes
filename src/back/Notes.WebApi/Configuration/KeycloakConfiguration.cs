@@ -13,6 +13,11 @@ public class KeycloakConfiguration
     public string Authority { get; set; } = string.Empty;
 
     /// <summary>
+    /// Получатель токена.
+    /// </summary>
+    public string Audience { get; set; } = string.Empty;
+
+    /// <summary>
     /// ID клиента в Keycloak.
     /// </summary>
     public string ClientId { get; set; } = string.Empty;

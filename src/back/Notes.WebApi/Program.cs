@@ -20,7 +20,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddCorsConfiguration();
 
 // Configure Keycloak authentication
-// builder.Services.AddKeycloakAuthentication(configuration);
+builder.Services.AddKeycloakAuthentication(configuration);
 
 var app = builder.Build();
 
@@ -39,8 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseCors();
 

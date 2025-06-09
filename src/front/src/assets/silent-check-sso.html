@@ -1,0 +1,10 @@
+<html>
+  <body>
+    <script>
+      // This file is used by keycloak-js for silent "check-sso" and token refreshes.
+      // It should be accessible via the URL specified in initOptions.silentCheckSsoRedirectUri
+      // and in the Keycloak client configuration under "Valid Redirect URIs" (often with a wildcard, e.g., /assets/*).
+      parent.postMessage(location.href, location.origin);
+    </script>
+  </body>
+</html>

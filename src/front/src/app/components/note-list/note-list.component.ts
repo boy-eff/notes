@@ -8,6 +8,9 @@ import { CommonModule } from '@angular/common';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
 import { Subscription } from 'rxjs';
 import { Note } from '../../models/note.interface';
+import Keycloak from 'keycloak-js';
+import { MatDialog } from '@angular/material/dialog';
+import { AddNoteDialogComponent } from '../add-note-dialog/add-note-dialog.component';
 
 /**
  * Компонент для отображения списка заметок.
@@ -52,9 +55,11 @@ export class NoteListComponent implements OnInit, OnDestroy {
   private routeSubscription?: Subscription;
 
   constructor(
-    private api: ApiService,
-    private route: ActivatedRoute,
-    private router: Router
+    private readonly api: ApiService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly keycloak: Keycloak,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -103,4 +108,29 @@ export class NoteListComponent implements OnInit, OnDestroy {
   navigateToNote(noteId: string) {
     this.router.navigate(['/notes', noteId]);
   }
+
+  addNote() {
+    const dialogRef = this.dialog.open(AddNoteDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading = true;
+        this.api.importNoteFromFile(result).subscribe({
+          next: () => {
+            this.loadNotes();
+          },
+          error: (err) => {
+            console.error('Error importing note:', err);
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  isAuthenticated() {
+    return this.keycloak.authenticated;
+  } 
 }

@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Добавление заметки</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="addNoteForm" class="add-note-form">
+        <p>Выберите файл для импорта и укажите тип заметки.</p>
+        
+        <div class="file-input-container">
+            <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+            <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">Выбрать файл</button>
+            <span *ngIf="addNoteForm.get('file')?.value" class="file-name">
+                {{ addNoteForm.get('file')?.value?.name }}
+            </span>
+        </div>
+
+        <mat-form-field>
+            <mat-label>Название</mat-label>
+            <input matInput formControlName="title">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Тип заметки</mat-label>
+            <mat-select formControlName="noteType">
+                <mat-option *ngFor="let type of noteTypes" [value]="type">
+                    {{ getNoteTypeLabel(type) }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]>Отмена</button>
+  <button mat-raised-button color="primary" (click)="submit()" [disabled]="!addNoteForm.valid">Создать</button>
+</mat-dialog-actions>

@@ -1,0 +1,23 @@
+.add-note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.file-input-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.file-input-container > button {
+    flex-shrink: 0;
+}
+
+.file-name {
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Можете изменить это значение по необходимости */
+}

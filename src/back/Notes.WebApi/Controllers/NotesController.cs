@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Notes.Application.Features.Files.Commands.AttachFileToNote;
@@ -8,6 +9,7 @@ using Notes.Application.Features.Notes.Dto;
 using Notes.Application.Features.Notes.Queries.GetNoteById;
 using Notes.Application.Features.Notes.Queries.GetNotes;
 using Notes.WebApi.Extensions;
+using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers;
 
@@ -66,6 +68,7 @@ public class NotesController : ControllerBase
     /// <param name="id">ID записки.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Результат удаления.</returns>
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(ObjectId id, CancellationToken cancellationToken)
     {
@@ -80,6 +83,7 @@ public class NotesController : ControllerBase
     /// <param name="noteId">ID заметки.</param>
     /// <param name="file">Файл для прикрепления.</param>
     /// <returns>URL прикрепленного файла.</returns>
+    [Authorize]
     [HttpPost("{noteId}/attach")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,15 +104,15 @@ public class NotesController : ControllerBase
     /// Импортирует записку из файла.
     /// </summary>
     /// <param name="noteTypeId">Идентификатор типа записки.</param>
-    /// <param name="title">Заголовок.</param>
-    /// <param name="file">Файл для импорта.</param>
+    /// <param name="model">Модель с файлом и заголовком.</param>
     /// <returns>Результат импорта.</returns>
-    [HttpPost("import/{noteTypeId:int}")]
+    [Authorize]
+    [HttpPost("import/{noteTypeId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ImportFromFile(int noteTypeId, string title, IFormFile file)
+    public async Task<IActionResult> ImportFromFile([FromRoute] string noteTypeId, [FromForm] ImportNoteFromFileDto model)
     {
-        var command = new ImportNoteFromFileCommand(file.ToFileDto(), noteTypeId, title);
+        var command = new ImportNoteFromFileCommand(model.File.ToFileDto(), noteTypeId, model.Title);
         
         await _mediator.Send(command);
         return Ok();
